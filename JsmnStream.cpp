@@ -189,6 +189,7 @@ int JsmnStream::parseChar(const char c)
     case PARSING_PRIMATIVE:
       break;
   }
+  parser_.pos++;
   return count_;
 }
 
@@ -203,7 +204,7 @@ int JsmnStream::parseJson(const char *js)
   count_ = parser_.toknext;
   size_t len = strlen(js);
 
-  for (; parser_.pos < len && js[parser_.pos] != '\0'; parser_.pos++)
+  while (parser_.pos < len && js[parser_.pos] != '\0')
   {
     char c;
     jsmntype_t type;
@@ -336,7 +337,8 @@ int JsmnStream::parsePrimitive(const char *js, size_t len)
 /**
  * Fills next token with JSON string.
  */
-int JsmnStream::parseString(const char *js, size_t len)
+// int JsmnStream::parseString(const char *js, size_t len)
+int JsmnStream::parseStringChar(const char c)
 {
   jsmntok_t *token;
 

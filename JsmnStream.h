@@ -103,7 +103,8 @@ private:
   jsmntok_t *allocToken();
   void fillToken(jsmntok_t *token, jsmntype_t type, int start, int end);
   int parsePrimitive(const char *js, size_t len);
-  int parseString(const char *js, size_t len);
+  // int parseString(const char *js, size_t len);
+  int parseStringChar(const char c);
 };
 #include "JsmnStreamDefinitions.h"
 
