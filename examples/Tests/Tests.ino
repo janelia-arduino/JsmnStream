@@ -1,10 +1,12 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdarg.h>
+// #include <stdio.h>
+// #include <stdlib.h>
+// #include <string.h>
+// #include <stdarg.h>
 
-#include "test.h"
-#include "testutil.h"
+#include "Tests.h"
+#include "Testutil.h"
+
+const unsigned int BAUDRATE = 9600;
 
 int test_empty(void) {
 	check(parse("{}", 1, 1,

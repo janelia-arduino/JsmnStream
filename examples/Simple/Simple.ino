@@ -10,8 +10,6 @@
 const unsigned int BAUDRATE = 9600;
 
 const char *JSON_STRING =
-  // "{\"user\": \"johndoe\", \"admin\": false, \"uid\": 1000,\n  "
-  // "\"groups\": [\"users\", \"wheel\", \"audio\", \"video\"],\"test\":null}";
   "{\"user\": \"johndoe\", \"admin\": false, \"uid\": 1000,\n  "
   "\"groups\": [\"users\", \"wheel\", \"audio\", \"video\"]}";
 
@@ -39,28 +37,65 @@ void loop()
   Serial << JSON_STRING << "\n";
 
   // int r = jsmn_stream.parseJson(JSON_STRING);
-  int r;
+  // if (r < 0)
+  // {
+  //   Serial << "Failed to parse JSON: " << r << "\n";
+  //   return;
+  // }
+  int ret;
   int len = strlen(JSON_STRING);
+  char c;
   for (int index=0; index < len && JSON_STRING[index] != '\0'; index++)
   {
-    char c = JSON_STRING[index];
-    r = jsmn_stream.parseChar(c);
+    c = JSON_STRING[index];
+    ret = jsmn_stream.parseChar(c);
+    if (ret < 0)
+    {
+      Serial << "Failed to parse JSON: " << ret << "\n";
+      return;
+    }
+    else
+    {
+      switch (ret)
+      {
+        case JsmnStream::PARSING_ROOT:
+          Serial  << c << " PARSING_ROOT\n";
+          break;
+        case JsmnStream::PARSED_ROOT:
+          Serial  << c << " PARSED_ROOT\n";
+          break;
+        case JsmnStream::PARSING_STRING:
+          Serial << c << " PARSING_STRING\n";
+          break;
+        case JsmnStream::PARSED_STRING:
+          Serial << c << " PARSED_STRING\n";
+          break;
+        case JsmnStream::PARSING_PRIMATIVE:
+          Serial << c << " PARSING_PRIMATIVE\n";
+          break;
+        case JsmnStream::PARSED_PRIMATIVE:
+          Serial << c << " PARSED_PRIMATIVE\n";
+          break;
+      }
+    }
   }
-  if (r < 0)
+  ret = jsmn_stream.checkParse();
+  if (ret < 0)
   {
-    Serial << "Failed to parse JSON: " << r << "\n";
+    Serial << "Failed to parse JSON: " << ret << "\n";
     return;
   }
 
+  int token_count = jsmn_stream.getTokenCount();
   /* Assume the top-level element is an object */
-  if (r < 1 || t[0].type != JsmnStream::JSMN_OBJECT)
+  if (token_count < 1 || t[0].type != JsmnStream::JSMN_OBJECT)
   {
     Serial << "Object expected\n";
     return;
   }
 
   /* Loop over all keys of the root object */
-  for (int i = 1; i < r; ++i)
+  for (int i = 1; i < token_count; ++i)
   {
     if (jsoneq(JSON_STRING, &t[i], "user") == 0)
     {

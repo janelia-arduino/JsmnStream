@@ -13,6 +13,7 @@
 #else
 #include "WProgram.h"
 #endif
+#include "Streaming.h"
 
 
 class JsmnStream
@@ -75,14 +76,16 @@ public:
   enum CharParseStates
     {
       PARSING_ROOT,
+      PARSED_ROOT,
       PARSING_STRING,
+      PARSED_STRING,
       PARSING_PRIMATIVE,
+      PARSED_PRIMATIVE,
     };
 
   /**
    * Create JSON parser over an array of tokens
    */
-  // void jsmn_init(jsmn_parser *parser);
   template <size_t NUM_TOKENS>
   JsmnStream(jsmntok_t (&tokens)[NUM_TOKENS]);
 
@@ -92,18 +95,21 @@ public:
    */
   int parseJson(const char *js);
   int parseChar(const char c);
+  size_t getTokenCount();
+  int checkParse();
   // size_t getTokenLen(jsmntok_t &token);
 private:
   jsmn_parser parser_;
   jsmntok_t *tokens_;
   size_t num_tokens_;
-  int count_;
+  size_t count_;
   CharParseStates char_parse_state_;
+  int start_;
+  bool backslash_;
   void setup();
   jsmntok_t *allocToken();
-  void fillToken(jsmntok_t *token, jsmntype_t type, int start, int end);
-  int parsePrimitive(const char *js, size_t len);
-  // int parseString(const char *js, size_t len);
+  void fillToken(jsmntok_t *token_ptr, jsmntype_t type, int start, int end);
+  int parsePrimitiveChar(const char c);
   int parseStringChar(const char c);
 };
 #include "JsmnStreamDefinitions.h"
