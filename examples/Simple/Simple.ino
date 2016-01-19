@@ -98,9 +98,6 @@ void loop()
         case JsmnStream::PRIMATIVE_BEGIN:
           Serial  << c << " PRIMATIVE_BEGIN\n";
           break;
-        case JsmnStream::PRIMATIVE_END:
-          Serial  << c << " PRIMATIVE_END\n";
-          break;
         case JsmnStream::PRIMATIVE_CHAR:
           Serial  << c << " PRIMATIVE_CHAR\n";
           break;

@@ -88,7 +88,6 @@ public:
       KEY_END,
       VALUE_END,
       PRIMATIVE_BEGIN,
-      PRIMATIVE_END,
       PRIMATIVE_CHAR
     };
 

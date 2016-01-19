@@ -29,7 +29,6 @@ int JsmnStream::parseChar(const char c)
     case WHITESPACE:
     case KEY_END:
     case VALUE_END:
-    case PRIMATIVE_END:
       switch (c)
       {
         case '{': case '[':
@@ -336,7 +335,8 @@ int JsmnStream::parsePrimitiveChar(const char c)
 #endif
 
  found:
-  char_parse_result_ = PRIMATIVE_END;
+  // Modified on next call to parseChar
+  char_parse_result_ = UNKNOWN;
   if (tokens_ == NULL)
   {
     parser_.pos--;
