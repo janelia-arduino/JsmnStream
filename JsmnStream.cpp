@@ -18,10 +18,18 @@ int JsmnStream::parseChar(const char c)
   jsmntok_t *token_ptr;
   jsmntype_t type;
   int i;
-  switch (char_parse_state_)
+  switch (char_parse_result_)
   {
-    case PARSING_ROOT: case PARSED_STRING: case PARSED_PRIMATIVE:
-      char_parse_state_ = PARSING_ROOT;
+    case OUTSIDE_CONTAINER:
+    case OBJECT_BEGIN:
+    case OBJECT_END:
+    case ARRAY_BEGIN:
+    case ARRAY_END:
+    case STRING_END:
+    case WHITESPACE:
+    case KEY_END:
+    case VALUE_END:
+    case PRIMATIVE_END:
       switch (c)
       {
         case '{': case '[':
@@ -42,6 +50,7 @@ int JsmnStream::parseChar(const char c)
             token_ptr->parent = parser_.toksuper;
 #endif
           }
+          char_parse_result_ = (c == '{' ? OBJECT_BEGIN : ARRAY_BEGIN);
           token_ptr->type = (c == '{' ? JSMN_OBJECT : JSMN_ARRAY);
           token_ptr->start = parser_.pos;
           parser_.toksuper = parser_.toknext - 1;
@@ -51,6 +60,7 @@ int JsmnStream::parseChar(const char c)
           {
             break;
           }
+          char_parse_result_ = (c == '}' ? OBJECT_END : ARRAY_END);
           type = (c == '}' ? JSMN_OBJECT : JSMN_ARRAY);
 #ifdef JSMN_PARENT_LINKS
           if (parser_.toknext < 1)
@@ -109,15 +119,17 @@ int JsmnStream::parseChar(const char c)
           break;
         case '\"':
           start_ = parser_.pos;
-          backslash_ = false;
-          char_parse_state_ = PARSING_STRING;
+          char_parse_result_ = STRING_BEGIN;
           break;
         case '\t' : case '\r' : case '\n' : case ' ':
+          char_parse_result_ = WHITESPACE;
           break;
         case ':':
+          char_parse_result_ = KEY_END;
           parser_.toksuper = parser_.toknext - 1;
           break;
         case ',':
+          char_parse_result_ = VALUE_END;
           if (tokens_ != NULL && parser_.toksuper != -1 &&
               tokens_[parser_.toksuper].type != JSMN_ARRAY &&
               tokens_[parser_.toksuper].type != JSMN_OBJECT)
@@ -159,7 +171,7 @@ int JsmnStream::parseChar(const char c)
         default:
 #endif
           start_ = parser_.pos;
-          char_parse_state_ = PARSING_PRIMATIVE;
+          char_parse_result_ = PRIMATIVE_BEGIN;
           break;
 
 #ifdef JSMN_STRICT
@@ -169,14 +181,17 @@ int JsmnStream::parseChar(const char c)
 #endif
       }
       break;
-    case PARSING_STRING:
+    case STRING_BEGIN:
+    case STRING_BACKSLASH:
+    case STRING_CHAR:
       r = parseStringChar(c);
       if (r < 0)
       {
         return r;
       }
       break;
-    case PARSING_PRIMATIVE:
+    case PRIMATIVE_BEGIN:
+    case PRIMATIVE_CHAR:
       r = parsePrimitiveChar(c);
       if (r < 0)
       {
@@ -185,7 +200,7 @@ int JsmnStream::parseChar(const char c)
       break;
   }
   parser_.pos++;
-  return char_parse_state_;
+  return char_parse_result_;
 }
 
 /**
@@ -252,9 +267,8 @@ void JsmnStream::setup()
   parser_.toknext = 0;
   parser_.toksuper = -1;
   count_ = 0;
-  char_parse_state_ = PARSING_ROOT;
+  char_parse_result_ = OUTSIDE_CONTAINER;
   start_ = 0;
-  backslash_ = false;
 }
 
 /**
@@ -301,6 +315,9 @@ int JsmnStream::parsePrimitiveChar(const char c)
     case '\t' : case '\r' : case '\n' : case ' ' :
     case ','  : case ']'  : case '}' :
       goto found;
+    default:
+      char_parse_result_ = PRIMATIVE_CHAR;
+      break;
   }
   if (c < 32 || c >= 127)
   {
@@ -309,7 +326,7 @@ int JsmnStream::parsePrimitiveChar(const char c)
   }
   else
   {
-    return 0;
+    return char_parse_result_;
   }
   // }
 #ifdef JSMN_STRICT
@@ -319,10 +336,10 @@ int JsmnStream::parsePrimitiveChar(const char c)
 #endif
 
  found:
+  char_parse_result_ = PRIMATIVE_END;
   if (tokens_ == NULL)
   {
     parser_.pos--;
-    char_parse_state_ = PARSING_ROOT;
     return parseChar(c);
   }
   jsmntok_t *token_ptr = allocToken();
@@ -341,7 +358,6 @@ int JsmnStream::parsePrimitiveChar(const char c)
     tokens_[parser_.toksuper].size++;
   }
   parser_.pos--;
-  char_parse_state_ = PARSED_PRIMATIVE;
   return parseChar(c);
 }
 
@@ -350,49 +366,55 @@ int JsmnStream::parsePrimitiveChar(const char c)
  */
 int JsmnStream::parseStringChar(const char c)
 {
-  if (!backslash_)
+  switch (char_parse_result_)
   {
-    if (c == '\\')
-    {
-      backslash_ = true;
-    }
-    /* Quote: end of string */
-    else if (c == '\"')
-    {
-      if (tokens_ == NULL)
+    case STRING_BEGIN:
+    case STRING_CHAR:
+      if (c == '\\')
       {
-        return 0;
-      }
-      jsmntok_t *token_ptr = allocToken();
-      if (token_ptr == NULL)
-      {
-        parser_.pos = start_;
-        return JSMN_ERROR_NOMEM;
-      }
-      fillToken(token_ptr, JSMN_STRING, start_+1, parser_.pos);
-#ifdef JSMN_PARENT_LINKS
-      token_ptr->parent = parser_.toksuper;
-#endif
-      count_++;
-      if (parser_.toksuper != -1 && tokens_ != NULL)
-      {
-        tokens_[parser_.toksuper].size++;
-      }
-      char_parse_state_ = PARSED_STRING;
-    }
-  }
-  else
-  {
-    backslash_ = false;
-    switch (c)
-    {
-      case '\"': case '/' : case '\\' : case 'b' :
-      case 'f' : case 'r' : case 'n'  : case 't' :
+        char_parse_result_ = STRING_BACKSLASH;
         break;
-      default:
-        parser_.pos = start_;
-        return JSMN_ERROR_INVAL;
-    }
+      }
+      /* Quote: end of string */
+      else if (c == '\"')
+      {
+        char_parse_result_ = STRING_END;
+        if (tokens_ == NULL)
+        {
+          break;
+        }
+        jsmntok_t *token_ptr = allocToken();
+        if (token_ptr == NULL)
+        {
+          parser_.pos = start_;
+          return JSMN_ERROR_NOMEM;
+        }
+        fillToken(token_ptr, JSMN_STRING, start_+1, parser_.pos);
+#ifdef JSMN_PARENT_LINKS
+        token_ptr->parent = parser_.toksuper;
+#endif
+        count_++;
+        if (parser_.toksuper != -1 && tokens_ != NULL)
+        {
+          tokens_[parser_.toksuper].size++;
+        }
+      }
+      else
+      {
+        char_parse_result_ = STRING_CHAR;
+      }
+      break;
+    case STRING_BACKSLASH:
+      switch (c)
+      {
+        case '\"': case '/' : case '\\' : case 'b' :
+        case 'f' : case 'r' : case 'n'  : case 't' :
+          char_parse_result_ = STRING_CHAR;
+          break;
+        default:
+          parser_.pos = start_;
+          return JSMN_ERROR_INVAL;
+      }
   }
-  return 0;
+  return char_parse_result_;
 }

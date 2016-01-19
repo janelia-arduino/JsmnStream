@@ -12,6 +12,7 @@ const unsigned int BAUDRATE = 9600;
 const char *JSON_STRING =
   "{\"user\": \"johndoe\", \"admin\": false, \"uid\": 1000,\n  "
   "\"groups\": [\"users\", \"wheel\", \"audio\", \"video\"]}";
+  // "[\"blinkLed\",0.3,0.5,20]";
 
 static int jsoneq(const char *json, JsmnStream::jsmntok_t *tok, const char *s)
 {
@@ -58,23 +59,50 @@ void loop()
     {
       switch (ret)
       {
-        case JsmnStream::PARSING_ROOT:
-          Serial  << c << " PARSING_ROOT\n";
+        case JsmnStream::OUTSIDE_CONTAINER:
+          Serial  << c << " OUTSIDE_CONTAINER\n";
           break;
-        case JsmnStream::PARSED_ROOT:
-          Serial  << c << " PARSED_ROOT\n";
+        case JsmnStream::OBJECT_BEGIN:
+          Serial  << c << " OBJECT_BEGIN\n";
           break;
-        case JsmnStream::PARSING_STRING:
-          Serial << c << " PARSING_STRING\n";
+        case JsmnStream::OBJECT_END:
+          Serial  << c << " OBJECT_END\n";
           break;
-        case JsmnStream::PARSED_STRING:
-          Serial << c << " PARSED_STRING\n";
+        case JsmnStream::ARRAY_BEGIN:
+          Serial  << c << " ARRAY_BEGIN\n";
           break;
-        case JsmnStream::PARSING_PRIMATIVE:
-          Serial << c << " PARSING_PRIMATIVE\n";
+        case JsmnStream::ARRAY_END:
+          Serial  << c << " ARRAY_END\n";
           break;
-        case JsmnStream::PARSED_PRIMATIVE:
-          Serial << c << " PARSED_PRIMATIVE\n";
+        case JsmnStream::STRING_BEGIN:
+          Serial  << c << " STRING_BEGIN\n";
+          break;
+        case JsmnStream::STRING_END:
+          Serial  << c << " STRING_END\n";
+          break;
+        case JsmnStream::STRING_BACKSLASH:
+          Serial  << c << " STRING_BACKSLASH\n";
+          break;
+        case JsmnStream::STRING_CHAR:
+          Serial  << c << " STRING_CHAR\n";
+          break;
+        case JsmnStream::WHITESPACE:
+          Serial  << c << " WHITESPACE\n";
+          break;
+        case JsmnStream::KEY_END:
+          Serial  << c << " KEY_END\n";
+          break;
+        case JsmnStream::VALUE_END:
+          Serial  << c << " VALUE_END\n";
+          break;
+        case JsmnStream::PRIMATIVE_BEGIN:
+          Serial  << c << " PRIMATIVE_BEGIN\n";
+          break;
+        case JsmnStream::PRIMATIVE_END:
+          Serial  << c << " PRIMATIVE_END\n";
+          break;
+        case JsmnStream::PRIMATIVE_CHAR:
+          Serial  << c << " PRIMATIVE_CHAR\n";
           break;
       }
     }

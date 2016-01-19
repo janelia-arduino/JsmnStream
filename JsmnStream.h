@@ -73,14 +73,23 @@ public:
 	int toksuper; /* superior token node, e.g parent object or array */
   } jsmn_parser;
 
-  enum CharParseStates
+  enum CharParseResults
     {
-      PARSING_ROOT,
-      PARSED_ROOT,
-      PARSING_STRING,
-      PARSED_STRING,
-      PARSING_PRIMATIVE,
-      PARSED_PRIMATIVE,
+      OUTSIDE_CONTAINER,
+      OBJECT_BEGIN,
+      OBJECT_END,
+      ARRAY_BEGIN,
+      ARRAY_END,
+      STRING_BEGIN,
+      STRING_END,
+      STRING_BACKSLASH,
+      STRING_CHAR,
+      WHITESPACE,
+      KEY_END,
+      VALUE_END,
+      PRIMATIVE_BEGIN,
+      PRIMATIVE_END,
+      PRIMATIVE_CHAR
     };
 
   /**
@@ -103,9 +112,8 @@ private:
   jsmntok_t *tokens_;
   size_t num_tokens_;
   size_t count_;
-  CharParseStates char_parse_state_;
+  CharParseResults char_parse_result_;
   int start_;
-  bool backslash_;
   void setup();
   jsmntok_t *allocToken();
   void fillToken(jsmntok_t *token_ptr, jsmntype_t type, int start, int end);
