@@ -20,7 +20,7 @@ int JsmnStream::parseChar(const char c)
   int i;
   switch (char_parse_result_)
   {
-    case OUTSIDE_CONTAINER:
+    case UNKNOWN:
     case OBJECT_BEGIN:
     case OBJECT_END:
     case ARRAY_BEGIN:
@@ -267,7 +267,7 @@ void JsmnStream::setup()
   parser_.toknext = 0;
   parser_.toksuper = -1;
   count_ = 0;
-  char_parse_result_ = OUTSIDE_CONTAINER;
+  char_parse_result_ = UNKNOWN;
   start_ = 0;
 }
 

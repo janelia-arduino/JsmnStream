@@ -75,7 +75,7 @@ public:
 
   enum CharParseResults
     {
-      OUTSIDE_CONTAINER,
+      UNKNOWN,
       OBJECT_BEGIN,
       OBJECT_END,
       ARRAY_BEGIN,

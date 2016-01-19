@@ -59,8 +59,8 @@ void loop()
     {
       switch (ret)
       {
-        case JsmnStream::OUTSIDE_CONTAINER:
-          Serial  << c << " OUTSIDE_CONTAINER\n";
+        case JsmnStream::UNKNOWN:
+          Serial  << c << " UNKNOWN\n";
           break;
         case JsmnStream::OBJECT_BEGIN:
           Serial  << c << " OBJECT_BEGIN\n";
