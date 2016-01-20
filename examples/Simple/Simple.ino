@@ -46,7 +46,7 @@ void loop()
   int ret;
   int len = strlen(JSON_STRING);
   char c;
-  for (int index=0; index < len && JSON_STRING[index] != '\0'; index++)
+  for (int index=0; index < len; ++index)
   {
     c = JSON_STRING[index];
     ret = jsmn_stream.parseChar(c);
