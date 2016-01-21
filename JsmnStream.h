@@ -94,8 +94,8 @@ public:
   /**
    * Create JSON parser over an array of tokens
    */
-  template <size_t NUM_TOKENS>
-  JsmnStream(jsmntok_t (&tokens)[NUM_TOKENS]);
+  template <size_t TOKEN_COUNT_MAX>
+  JsmnStream(jsmntok_t (&tokens)[TOKEN_COUNT_MAX]);
 
   /**
    * Run JSON parser. It parses a JSON data string into and array of tokens, each describing
@@ -105,12 +105,10 @@ public:
   int parseChar(const char c);
   size_t getTokenCount();
   int checkParse();
-  // size_t getTokenLen(jsmntok_t &token);
 private:
   jsmn_parser parser_;
   jsmntok_t *tokens_;
-  size_t num_tokens_;
-  size_t count_;
+  size_t token_count_max_;
   CharParseResults char_parse_result_;
   int start_;
   void setup();

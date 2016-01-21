@@ -32,7 +32,6 @@ int JsmnStream::parseChar(const char c)
       switch (c)
       {
         case '{': case '[':
-          count_++;
           if (tokens_ == NULL)
           {
             break;
@@ -226,12 +225,12 @@ int JsmnStream::parseJson(const char *js)
   {
     return r;
   }
-  return count_;
+  return getTokenCount();
 }
 
 size_t JsmnStream::getTokenCount()
 {
-  return count_;
+  return parser_.toknext;
 }
 
 int JsmnStream::checkParse()
@@ -251,13 +250,8 @@ int JsmnStream::checkParse()
   return JSMN_ERROR_NOMEM;
 }
 
-// size_t JsmnStream::getTokenLen(jsmntok_t &token)
-// {
-//   return token.end-token.start;
-// }
-
 /**
- * Creates a new parser based over a given  buffer with an array of tokens
+ * Creates a new parser based over a given buffer with an array of tokens
  * available.
  */
 void JsmnStream::setup()
@@ -265,7 +259,6 @@ void JsmnStream::setup()
   parser_.pos = 0;
   parser_.toknext = 0;
   parser_.toksuper = -1;
-  count_ = 0;
   char_parse_result_ = UNKNOWN;
   start_ = 0;
 }
@@ -276,7 +269,7 @@ void JsmnStream::setup()
 JsmnStream::jsmntok_t* JsmnStream::allocToken()
 {
   jsmntok_t *tok;
-  if (parser_.toknext >= num_tokens_)
+  if (parser_.toknext >= token_count_max_)
   {
     return NULL;
   }
@@ -352,7 +345,6 @@ int JsmnStream::parsePrimitiveChar(const char c)
 #ifdef JSMN_PARENT_LINKS
   token_ptr->parent = parser_.toksuper;
 #endif
-  count_++;
   if (parser_.toksuper != -1 && tokens_ != NULL)
   {
     tokens_[parser_.toksuper].size++;
@@ -393,7 +385,6 @@ int JsmnStream::parseStringChar(const char c)
 #ifdef JSMN_PARENT_LINKS
         token_ptr->parent = parser_.toksuper;
 #endif
-        count_++;
         if (parser_.toksuper != -1 && tokens_ != NULL)
         {
           tokens_[parser_.toksuper].size++;
