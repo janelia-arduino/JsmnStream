@@ -105,6 +105,7 @@ public:
   int parseChar(const char c);
   size_t getTokenCount();
   int checkParse();
+  void resetParser();
 private:
   jsmn_parser parser_;
   jsmntok_t *tokens_;

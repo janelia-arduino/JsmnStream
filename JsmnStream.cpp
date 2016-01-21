@@ -250,6 +250,11 @@ int JsmnStream::checkParse()
   return JSMN_ERROR_NOMEM;
 }
 
+void JsmnStream::resetParser()
+{
+  setup();
+}
+
 /**
  * Creates a new parser based over a given buffer with an array of tokens
  * available.
