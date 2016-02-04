@@ -198,6 +198,9 @@ int JsmnStream::parseChar(const char c)
       break;
   }
   parser_.pos++;
+  Serial << "parser_.pos = " << parser_.pos << "\n";
+  Serial << "parser_.toknext = " << parser_.toknext << "\n";
+  Serial << "parser_.toksuper = " << parser_.toksuper << "\n";
   return char_parse_result_;
 }
 

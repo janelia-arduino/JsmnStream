@@ -43,21 +43,21 @@ void loop()
   //   Serial << "Failed to parse JSON: " << r << "\n";
   //   return;
   // }
-  int ret;
+  int parse_result;
   int len = strlen(JSON_STRING);
   char c;
   for (int index=0; index < len; ++index)
   {
     c = JSON_STRING[index];
-    ret = jsmn_stream.parseChar(c);
-    if (ret < 0)
+    parse_result = jsmn_stream.parseChar(c);
+    if (parse_result < 0)
     {
-      Serial << "Failed to parse JSON: " << ret << "\n";
+      Serial << "Failed to parse JSON: " << parse_result << "\n";
       return;
     }
     else
     {
-      switch (ret)
+      switch (parse_result)
       {
         case JsmnStream::UNKNOWN:
           Serial  << c << " UNKNOWN\n";
@@ -104,10 +104,10 @@ void loop()
       }
     }
   }
-  ret = jsmn_stream.checkParse();
-  if (ret < 0)
+  parse_result = jsmn_stream.checkParse();
+  if (parse_result < 0)
   {
-    Serial << "Failed to parse JSON: " << ret << "\n";
+    Serial << "Failed to parse JSON: " << parse_result << "\n";
     return;
   }
 
