@@ -47,3 +47,7 @@ for (int index=0; index < strlen(js); ++index)
 }
 ret = jsmn_stream.checkParse();
 ```
+
+##Install Library Dependencies
+
+[arduino-libraries](https://github.com/janelia-arduino/arduino-libraries)
