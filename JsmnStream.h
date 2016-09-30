@@ -15,6 +15,8 @@
 #endif
 #include "Streaming.h"
 
+#undef KEY_END
+
 
 class JsmnStream
 {

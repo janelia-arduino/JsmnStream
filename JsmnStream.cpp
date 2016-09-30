@@ -414,6 +414,18 @@ int JsmnStream::parseStringChar(const char c)
           parser_.pos = start_;
           return JSMN_ERROR_INVAL;
       }
+    case UNKNOWN:
+    case OBJECT_BEGIN:
+    case OBJECT_END:
+    case ARRAY_BEGIN:
+    case ARRAY_END:
+    case STRING_END:
+    case WHITESPACE:
+    case KEY_END:
+    case VALUE_END:
+    case PRIMATIVE_BEGIN:
+    case PRIMATIVE_CHAR:
+      break;
   }
   return char_parse_result_;
 }
