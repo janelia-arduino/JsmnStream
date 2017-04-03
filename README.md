@@ -1,4 +1,4 @@
-#JsmnStream
+# JsmnStream
 
 Authors:
 
@@ -16,7 +16,7 @@ processed more easily from a stream.
 
 [Original jsmn README](./README_ORIGINAL.md)
 
-##jsmn
+## jsmn
 
 ```c++
 jsmn_parser parser;
@@ -30,7 +30,7 @@ jsmn_init(&parser);
 jsmn_parse(&parser, js, tokens, 10);
 ```
 
-##JsmnStream
+## JsmnStream
 
 ```c++
 JsmnStream::jsmntok_t tokens[10];
@@ -48,6 +48,6 @@ for (int index=0; index < strlen(js); ++index)
 ret = jsmn_stream.checkParse();
 ```
 
-##Install Library Dependencies
+## Install Library Dependencies
 
 [arduino-libraries](https://github.com/janelia-arduino/arduino-libraries)
