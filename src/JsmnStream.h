@@ -8,12 +8,8 @@
 // ----------------------------------------------------------------------------
 #ifndef _JSMN_STREAM_H_
 #define _JSMN_STREAM_H_
-#if defined(ARDUINO) && ARDUINO >= 100
-#include "Arduino.h"
-#else
-#include "WProgram.h"
-#endif
-#include "Streaming.h"
+#include <Arduino.h>
+#include <Streaming.h>
 
 #undef KEY_END
 
@@ -120,6 +116,6 @@ private:
   int parsePrimitiveChar(const char c);
   int parseStringChar(const char c);
 };
-#include "JsmnStreamDefinitions.h"
+#include "JsmnStream/JsmnStreamDefinitions.h"
 
 #endif /* _JSMN_STREAM_H_ */

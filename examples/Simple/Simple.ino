@@ -1,13 +1,13 @@
-#include "Arduino.h"
-#include "Streaming.h"
-#include "JsmnStream.h"
+#include <Arduino.h>
+#include <Streaming.h>
+#include <JsmnStream.h>
 
 /*
  * A small example of jsmn parsing when JSON structure is known and number of
  * tokens is predictable.
  */
 
-const unsigned int BAUDRATE = 9600;
+const long BAUDRATE = 115200;
 
 const char *JSON_STRING =
   "{\"user\": \"johndoe\", \"admin\": false, \"uid\": 1000,\n  "

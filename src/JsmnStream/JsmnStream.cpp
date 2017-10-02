@@ -6,7 +6,7 @@
 // Serge Zaitsev zaitsev.serge@gmail.com
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#include "JsmnStream.h"
+#include "../JsmnStream.h"
 
 
 /**
