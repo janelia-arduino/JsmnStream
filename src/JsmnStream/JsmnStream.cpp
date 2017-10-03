@@ -70,7 +70,7 @@ int JsmnStream::parseChar(const char c)
           {
             if (token_ptr->start != -1 && token_ptr->end == -1)
             {
-              if (token_ptr->type != type)
+              if (token_ptr->type != type || parser_.toksuper == -1)
               {
                 return JSMN_ERROR_INVAL;
               }
