@@ -7,7 +7,7 @@
  * tokens is predictable.
  */
 
-const long BAUDRATE = 115200;
+const long BAUD = 115200;
 
 const char *JSON_STRING =
   "{\"user\": \"johndoe\", \"admin\": false, \"uid\": 1000,\n  "
@@ -26,7 +26,7 @@ static int jsoneq(const char *json, JsmnStream::jsmntok_t *tok, const char *s)
 
 void setup()
 {
-  Serial.begin(BAUDRATE);
+  Serial.begin(BAUD);
 }
 
 void loop()
