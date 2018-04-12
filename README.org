@@ -1,0 +1,51 @@
+#+TITLE: JsmnStream
+#+AUTHOR: Peter Polidoro
+#+EMAIL: peterpolidoro@gmail.com
+
+* Library Information
+  - Author :: Serge Zaitsev
+  - Modififications :: Peter Polidoro
+  - Maintainer ::
+  - License :: BSD
+
+  Reformatting of Serge Zaitsev's jsmn library to parse a JSON string
+  one char at a time rather than on an entire buffer so it can be
+  processed more easily from a stream.
+
+  [[./README_ORIGINAL.md][Original jsmn README]]
+
+* jsmn
+
+  #+BEGIN_SRC C++
+jsmn_parser parser;
+jsmntok_t tokens[10];
+
+jsmn_init(&parser);
+
+// js - pointer to JSON string
+// tokens - an array of tokens available
+// 10 - number of tokens available
+jsmn_parse(&parser, js, tokens, 10);
+  #+END_SRC
+
+* JsmnStream
+
+  #+BEGIN_SRC C++
+JsmnStream::jsmntok_t tokens[10];
+JsmnStream jsmn_stream(tokens);
+// js - pointer to JSON string
+// tokens - an array of tokens available
+// 10 - number of tokens available
+int ret;
+char c;
+for (int index=0; index < strlen(js); ++index)
+{
+  c = js[index];
+  ret = jsmn_stream.parseChar(c);
+}
+ret = jsmn_stream.checkParse();
+  #+END_SRC
+
+* Library Dependencies
+
+  [[https://github.com/janelia-arduino/arduino-libraries][arduino-libraries]]
