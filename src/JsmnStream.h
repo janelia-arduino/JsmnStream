@@ -9,7 +9,6 @@
 #ifndef _JSMN_STREAM_H_
 #define _JSMN_STREAM_H_
 #include <Arduino.h>
-#include <Streaming.h>
 
 #undef KEY_END
 
@@ -25,23 +24,23 @@ public:
    *  o Other primitive: number, boolean (true/false) or null
    */
   typedef enum
-    {
-     JSMN_UNDEFINED = 0,
-     JSMN_OBJECT = 1,
-     JSMN_ARRAY = 2,
-     JSMN_STRING = 3,
-     JSMN_PRIMITIVE = 4
-    } jsmntype_t;
+  {
+    JSMN_UNDEFINED = 0,
+    JSMN_OBJECT = 1,
+    JSMN_ARRAY = 2,
+    JSMN_STRING = 3,
+    JSMN_PRIMITIVE = 4
+  } jsmntype_t;
 
   enum jsmnerr
-    {
-     /* Not enough tokens were provided */
-     JSMN_ERROR_NOMEM = -1,
-     /* Invalid character inside JSON string */
-     JSMN_ERROR_INVAL = -2,
-     /* The string is not a full JSON packet, more bytes expected */
-     JSMN_ERROR_PART = -3
-    };
+  {
+    /* Not enough tokens were provided */
+    JSMN_ERROR_NOMEM = -1,
+    /* Invalid character inside JSON string */
+    JSMN_ERROR_INVAL = -2,
+    /* The string is not a full JSON packet, more bytes expected */
+    JSMN_ERROR_PART = -3
+  };
 
   /**
    * JSON token description.
@@ -72,22 +71,22 @@ public:
   } jsmn_parser;
 
   enum CharParseResults
-    {
-     UNKNOWN,
-     OBJECT_BEGIN,
-     OBJECT_END,
-     ARRAY_BEGIN,
-     ARRAY_END,
-     STRING_BEGIN,
-     STRING_END,
-     STRING_BACKSLASH,
-     STRING_CHAR,
-     WHITESPACE,
-     KEY_END,
-     VALUE_END,
-     PRIMATIVE_BEGIN,
-     PRIMATIVE_CHAR
-    };
+  {
+    UNKNOWN,
+    OBJECT_BEGIN,
+    OBJECT_END,
+    ARRAY_BEGIN,
+    ARRAY_END,
+    STRING_BEGIN,
+    STRING_END,
+    STRING_BACKSLASH,
+    STRING_CHAR,
+    WHITESPACE,
+    KEY_END,
+    VALUE_END,
+    PRIMATIVE_BEGIN,
+    PRIMATIVE_CHAR
+  };
 
   /**
    * Create JSON parser over an array of tokens

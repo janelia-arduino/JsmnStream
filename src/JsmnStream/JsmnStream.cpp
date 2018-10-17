@@ -129,8 +129,8 @@ int JsmnStream::parseChar(const char c)
         case ',':
           char_parse_result_ = VALUE_END;
           if (tokens_ != NULL && parser_.toksuper != -1 &&
-              tokens_[parser_.toksuper].type != JSMN_ARRAY &&
-              tokens_[parser_.toksuper].type != JSMN_OBJECT)
+            tokens_[parser_.toksuper].type != JSMN_ARRAY &&
+            tokens_[parser_.toksuper].type != JSMN_OBJECT)
           {
 #ifdef JSMN_PARENT_LINKS
             parser_.toksuper = tokens_[parser_.toksuper].parent;
@@ -159,7 +159,7 @@ int JsmnStream::parseChar(const char c)
           {
             jsmntok_t *t = &tokens_[parser_.toksuper];
             if (t->type == JSMN_OBJECT ||
-                (t->type == JSMN_STRING && t->size != 0))
+              (t->type == JSMN_STRING && t->size != 0))
             {
               return JSMN_ERROR_INVAL;
             }

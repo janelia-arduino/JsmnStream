@@ -8,16 +8,16 @@
  */
 
 const long BAUD = 115200;
+const long LOOP_DELAY = 2000;
 
 const char *JSON_STRING =
   "{\"user\": \"johndoe\", \"admin\": false, \"uid\": 1000,\n  "
   "\"groups\": [\"users\", \"wheel\", \"audio\", \"video\"]}";
-  // "[\"blinkLed\",0.3,0.5,20]";
 
 static int jsoneq(const char *json, JsmnStream::jsmntok_t *tok, const char *s)
 {
   if (tok->type == JsmnStream::JSMN_STRING && (int) strlen(s) == tok->end - tok->start &&
-      strncmp(json + tok->start, s, tok->end - tok->start) == 0)
+    strncmp(json + tok->start, s, tok->end - tok->start) == 0)
   {
     return 0;
   }
@@ -31,18 +31,21 @@ void setup()
 
 void loop()
 {
+  delay(LOOP_DELAY);
+
   JsmnStream::jsmntok_t t[128]; /* We expect no more than 128 tokens */
   JsmnStream jsmn_stream(t);
 
   Serial << "JSON_STRING = " << "\n";
   Serial << JSON_STRING << "\n";
 
-  // int r = jsmn_stream.parseJson(JSON_STRING);
-  // if (r < 0)
-  // {
-  //   Serial << "Failed to parse JSON: " << r << "\n";
-  //   return;
-  // }
+  int r = jsmn_stream.parseJson(JSON_STRING);
+  if (r < 0)
+  {
+    Serial << "Failed to parse JSON: " << r << "\n";
+    return;
+  }
+
   int parse_result;
   int len = strlen(JSON_STRING);
   char c;
@@ -180,5 +183,4 @@ void loop()
       Serial << "Unexpected key: " << str << "\n";
     }
   }
-  delay(1000);
 }

@@ -1,6 +1,7 @@
-
 JSMN
 ====
+
+[![Build Status](https://travis-ci.org/zserge/jsmn.svg?branch=master)](https://travis-ci.org/zserge/jsmn)
 
 jsmn (pronounced like 'jasmine') is a minimalistic JSON parser in C.  It can be
 easily integrated into resource-limited or embedded projects.
@@ -12,24 +13,22 @@ Library sources are available at https://github.com/zserge/jsmn
 The web page with some information about jsmn can be found at
 [http://zserge.com/jsmn.html][2]
 
-Philosophy
-----------
+## Philosophy
 
 Most JSON parsers offer you a bunch of functions to load JSON data, parse it
 and extract any value by its name. jsmn proves that checking the correctness of
 every JSON packet or allocating temporary objects to store parsed JSON fields
-often is an overkill. 
+often is an overkill.
 
 JSON format itself is extremely simple, so why should we complicate it?
 
 jsmn is designed to be	**robust** (it should work fine even with erroneous
 data), **fast** (it should parse data on the fly), **portable** (no superfluous
-dependencies or non-standard C extensions). An of course, **simplicity** is a
+dependencies or non-standard C extensions). And of course, **simplicity** is a
 key feature - simple code style, simple algorithm, simple integration into
 other projects.
 
-Features
---------
+## Features
 
 * compatible with C89
 * no dependencies (even libc!)
@@ -41,8 +40,7 @@ Features
 * incremental single-pass parsing
 * library code is covered with unit-tests
 
-Design
-------
+## Design
 
 The rudimentary jsmn object is a **token**. Let's consider a JSON string:
 
@@ -75,8 +73,7 @@ object hierarchy.
 This approach provides enough information for parsing any JSON data and makes
 it possible to use zero-copy techniques.
 
-Install
--------
+## Install
 
 To clone the repository you should have Git installed. Just run:
 
@@ -91,8 +88,7 @@ Let me know, if some tests fail.
 If build was successful, you should get a `libjsmn.a` library.
 The header file you should include is called `"jsmn.h"`.
 
-API
----
+## API
 
 Token types are described by `jsmntype_t`:
 
@@ -108,7 +104,7 @@ Token types are described by `jsmntype_t`:
 numbers, booleans and null, because one can easily tell the type using the
 first character:
 
-* <code>'t', 'f'</code> - boolean 
+* <code>'t', 'f'</code> - boolean
 * <code>'n'</code> - null
 * <code>'-', '0'..'9'</code> - number
 
@@ -122,7 +118,7 @@ Token is an object of `jsmntok_t` type:
 	} jsmntok_t;
 
 **Note:** string tokens point to the first character after
-the opening quote and the previous symbol before final quote. This was made 
+the opening quote and the previous symbol before final quote. This was made
 to simplify string extraction from JSON data.
 
 All job is done by `jsmn_parser` object. You can initialize a new parser using:
@@ -135,7 +131,7 @@ All job is done by `jsmn_parser` object. You can initialize a new parser using:
 	// js - pointer to JSON string
 	// tokens - an array of tokens available
 	// 10 - number of tokens available
-	jsmn_parse(&parser, js, tokens, 10);
+	jsmn_parse(&parser, js, strlen(js), tokens, 10);
 
 This will create a parser, and then it tries to parse up to 10 JSON tokens from
 the `js` string.
@@ -152,13 +148,12 @@ If something goes wrong, you will get an error. Error will be one of these:
 * `JSMN_ERROR_NOMEM` - not enough tokens, JSON string is too large
 * `JSMN_ERROR_PART` - JSON string is too short, expecting more JSON data
 
-If you get `JSON_ERROR_NOMEM`, you can re-allocate more tokens and call
+If you get `JSMN_ERROR_NOMEM`, you can re-allocate more tokens and call
 `jsmn_parse` once more.  If you read json data from the stream, you can
-periodically call `jsmn_parse` and check if return value is `JSON_ERROR_PART`.
+periodically call `jsmn_parse` and check if return value is `JSMN_ERROR_PART`.
 You will get this error until you reach the end of JSON data.
 
-Other info
-----------
+## Other info
 
 This software is distributed under [MIT license](http://www.opensource.org/licenses/mit-license.php),
  so feel free to integrate it in your commercial products.
