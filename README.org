@@ -1,6 +1,6 @@
 #+TITLE: JsmnStream
 #+AUTHOR: Serge Zaitsev
-#+EMAIL: peterpolidoro@gmail.com
+#+EMAIL: peter@polidoro.io
 
 * Library Information
   - Name :: JsmnStream
@@ -10,7 +10,7 @@
   - Author :: Serge Zaitsev
   - Modififications :: Peter Polidoro
   - Maintainer :: Peter Polidoro
-  - Email :: peterpolidoro@gmail.com
+  - Email :: peter@polidoro.io
 
   Reformatting of Serge Zaitsev's jsmn library to parse a JSON string
   one char at a time rather than on an entire buffer so it can be

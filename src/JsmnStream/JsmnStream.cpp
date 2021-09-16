@@ -4,7 +4,7 @@
 //
 // Authors:
 // Serge Zaitsev zaitsev.serge@gmail.com
-// Peter Polidoro peterpolidoro@gmail.com
+// Peter Polidoro peter@polidoro.io
 // ----------------------------------------------------------------------------
 #include "../JsmnStream.h"
 

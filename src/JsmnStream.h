@@ -4,7 +4,7 @@
 //
 // Authors:
 // Serge Zaitsev zaitsev.serge@gmail.com
-// Peter Polidoro peterpolidoro@gmail.com
+// Peter Polidoro peter@polidoro.io
 // ----------------------------------------------------------------------------
 #ifndef _JSMN_STREAM_H_
 #define _JSMN_STREAM_H_
